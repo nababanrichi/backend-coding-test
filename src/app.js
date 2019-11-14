@@ -8,7 +8,7 @@ const jsonParser = bodyParser.json();
 
 module.exports = (db) => {
     /**
-     * @api {get} /health Check App Health Statys
+     * @api {get} /health Check App Health Status
      * @apiName checkHealth
      * @apiGroup Misc
      *
@@ -16,9 +16,7 @@ module.exports = (db) => {
      * 
      * @apiSuccessExample Success-Response:
      *     HTTP/1.1 200 OK
-     *     {
-     *       "text": "Healthy"
-     *     }
+     *     "Healthy"
      */
     app.get('/health', (req, res) => res.send('Healthy'));
 
