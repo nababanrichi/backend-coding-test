@@ -11,6 +11,7 @@ module.exports = (db) => {
      * @api {get} /health Check App Health Status
      * @apiName checkHealth
      * @apiGroup Misc
+     * @apiVersion 0.1.0
      *
      * @apiSuccess {String} text Healthy
      * 
@@ -24,6 +25,7 @@ module.exports = (db) => {
      * @api {post} /rides Insert New Rides to DB
      * @apiName putRides
      * @apiGroup Rides
+     * @apiVersion 0.1.0
      *
      * @apiParam {Number} start_lat Start Latitude, need to be between -90 and 90.
      * @apiParam {Number} start_long Start Longitude, need to be between -100 and 100.
@@ -149,6 +151,7 @@ module.exports = (db) => {
      * @api {get} /rides Get all Rides at DB
      * @apiName getRides
      * @apiGroup Rides
+     * @apiVersion 0.1.0
      *
      * @apiSuccess {Object[]} rides List of rides.
      * 
@@ -208,6 +211,7 @@ module.exports = (db) => {
      * @api {get} /rides/:id Get Rides by ID
      * @apiName getRidesById
      * @apiGroup Rides
+     * @apiVersion 0.1.0
      *
      * @apiSuccess {Object[]} rides Rides Record.
      * 
