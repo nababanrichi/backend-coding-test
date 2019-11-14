@@ -6,6 +6,7 @@
   "directories": {
     "test": "tests"
   },
+  "prepush": "check-coverage, check-code-format",
   "scripts": {
     "test": "mocha tests",
     "check-coverage": "nyc --check-coverage --functions 90 --lines 90 --branches 90 --per-file mocha tests",
