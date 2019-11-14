@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "nyc mocha tests && ./node_modules/.bin/eslint src/*",
+    "test": "nyc --check-coverage --functions 90 --lines 90 --branches 90 --per-file mocha tests && ./node_modules/.bin/eslint src/*",
     "documenting": "apidoc -i src/ -o doc/",
     "start": "node index.js"
   },
