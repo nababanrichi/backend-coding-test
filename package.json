@@ -23,6 +23,8 @@
     "sqlite3": "^4.0.6"
   },
   "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-google": "^0.14.0",
     "mocha": "^6.1.4",
     "supertest": "^4.0.2"
   }
