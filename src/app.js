@@ -59,7 +59,7 @@ module.exports = (db, logger) => {
      *              "endLong": 0,
      *              "riderName": "Budi",
      *              "driverName": "Anton",
-     *              "driverVehicle": "Yaris",
+     *              "driverVehicle": "Tesla Model 3 2020",
      *              "created": "2019-11-14 03:17:51"
      *          }
      *      ]
@@ -200,7 +200,7 @@ module.exports = (db, logger) => {
      *              "endLong": 0,
      *              "riderName": "Budi",
      *              "driverName": "Anton",
-     *              "driverVehicle": "Yaris",
+     *              "driverVehicle": "Tesla Model 3 2020",
      *              "created": "2019-11-14 03:17:51"
      *          }
      *      ]
@@ -294,7 +294,7 @@ module.exports = (db, logger) => {
      *              "endLong": 0,
      *              "riderName": "Budi",
      *              "driverName": "Anton",
-     *              "driverVehicle": "Yaris",
+     *              "driverVehicle": "Tesla Model 3 2020",
      *              "created": "2019-11-14 03:17:51"
      *          }
      *      ]
