@@ -13,6 +13,10 @@
     "documenting": "apidoc -i src/ -o doc/",
     "start": "node index.js"
   },
+  "pre-push": [
+    "check-code-format",
+    "check-coverage"
+  ],
   "keywords": [
     "Xendit"
   ],
