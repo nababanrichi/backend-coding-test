@@ -1,3 +1,8 @@
+# CUSTOM Document
+
+1. Execute "npm run documenting" to build the api documents
+
+
 # Xendit Coding Exercise
 
 The goal of these exercises are to assess your proficiency in software engineering that is related to the daily work that we do at Xendit. Please follow the instructions below to complete the assessment.
