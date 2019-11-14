@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests && ./node_modules/.bin/eslint src/*",
+    "test": "nyc mocha tests && ./node_modules/.bin/eslint src/*",
     "documenting": "apidoc -i src/ -o doc/",
     "start": "node index.js"
   },
