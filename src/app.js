@@ -185,25 +185,40 @@ module.exports = (db, logger) => {
      * @api {get} /rides Get all Rides at DB
      * @apiName getRides
      * @apiGroup Rides
-     * @apiVersion 0.1.0
+     * @apiVersion 0.2.0
+     *
+     * @apiParam {Number} page Optional, page number.
+     * @apiParam {Number} limit Optional, total records will be given max per request.
+     *
+     * @apiParamExample {json} Request-Example:
+     *  {
+     *      "page": "1",
+     *      "limit": "1"
+     * }
      *
      * @apiSuccess {Object[]} rides List of rides.
      *
      * @apiSuccessExample {json} Success-Response:
-     *     HTTP/1.1 200 OK
-     *      [
-     *          {
-     *              "rideID": 1,
-     *              "startLat": 0,
-     *              "startLong": 0,
-     *              "endLat": 0,
-     *              "endLong": 0,
-     *              "riderName": "Budi",
-     *              "driverName": "Anton",
-     *              "driverVehicle": "Tesla Model 3 2020",
-     *              "created": "2019-11-14 03:17:51"
-     *          }
-     *      ]
+     *    HTTP/1.1 200 OK
+     *    {
+     *      "records": [
+     *        {
+     *           "rideID": 1,
+     *           "startLat": 0,
+     *           "startLong": 0,
+     *           "endLat": 0,
+     *           "endLong": 0,
+     *           "riderName": "Budi",
+     *           "driverName": "Anton",
+     *           "driverVehicle": "Tesla Model 3 2020",
+     *           "created": "2019-11-14 03:17:51"
+     *        }
+     *      ],
+     *      "page": 1,
+     *      "limit": 1,
+     *      "total_page": 1,
+     *      "total_record": 1
+     *    }
      *
      * @apiError {String} error_code Error Code (e.g.: VALIDATION_ERROR).
      * @apiError {String} message Error Message.
@@ -221,7 +236,7 @@ module.exports = (db, logger) => {
      *       "message": "Could not find any rides"
      *     }
      */
-  app.get('/rides', (req, res) => {
+  app.get('/rides', jsonParser, (req, res) => {
     // TODO: Dirty Code #2 - Need to find out how to set log globally
     const requestStart = Date.now();
 
@@ -256,7 +271,19 @@ module.exports = (db, logger) => {
     });
     // END: Dirty Code #2
 
-    db.all('SELECT * FROM Rides', function(err, rows) {
+    let limit = 100;
+    if (req.body.limit != undefined) {
+      limit = req.body.limit;
+    }
+    let page = 1;
+    if (req.body.page != undefined) {
+      page = req.body.page;
+    }
+    let totalPage = 1;
+    let totalRecord = 0;
+    const offset = (page-1) * limit;
+
+    db.get('SELECT count(rideID) total_record FROM Rides', function(err, result) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',
@@ -264,14 +291,42 @@ module.exports = (db, logger) => {
         });
       }
 
-      if (rows.length === 0) {
-        return res.status(404).json({
+      totalRecord = result.total_record;
+      if (totalRecord > 0) {
+        totalPage = Math.ceil(totalRecord/limit);
+
+        if (page > totalPage) {
+          return res.send({
+            records: [],
+            page: page,
+            limit: limit,
+            total_page: totalPage,
+            total_record: totalRecord,
+          });
+        } else {
+          db.all('SELECT * FROM Rides LIMIT '+limit+' OFFSET '+offset, function(err, rows) {
+            if (err) {
+              return res.status(500).send({
+                error_code: 'SERVER_ERROR',
+                message: 'Unknown error',
+              });
+            }
+
+            res.send({
+              records: rows,
+              page: page,
+              limit: limit,
+              total_page: totalPage,
+              total_record: totalRecord,
+            });
+          });
+        }
+      } else {
+        res.status(404).send({
           error_code: 'RIDES_NOT_FOUND_ERROR',
           message: 'Could not find any rides',
         });
       }
-
-      res.send(rows);
     });
   });
 
