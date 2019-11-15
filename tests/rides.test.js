@@ -124,4 +124,34 @@ describe('RIDES API DB connected', () => {
                 .expect(200, done);
         });
     });
+    
+    describe('Insert Ride with valid data', () => {
+        it('should return error', (done) => {
+            request(app)
+                .post('/rides')
+                .send({"start_lat": "0","start_long": "0","end_lat": "0","end_long": "0","rider_name": "Budi","driver_name": "Anton","driver_vehicle": "Tesla Model 3 2020"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET Rides - with limit and page', () => {
+        it('should return error', (done) => {
+            request(app)
+                .get('/rides')
+                .send({"limit": "1", "page": "1"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
+
+    describe('GET Rides - with limit and page', () => {
+        it('should return error', (done) => {
+            request(app)
+                .get('/rides')
+                .send({"limit": "1", "page": "5"})
+                .expect('Content-Type', /json/)
+                .expect(200, done);
+        });
+    });
 });
