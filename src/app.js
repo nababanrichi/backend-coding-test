@@ -6,7 +6,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-module.exports = (db, logger) => {
+module.exports = (db) => {
   /**
      * @api {get} /health Check App Health Status
      * @apiName checkHealth
