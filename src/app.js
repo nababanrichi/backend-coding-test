@@ -7,19 +7,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 module.exports = (db) => {
-  /**
-     * @api {get} /health Check App Health Status
-     * @apiName checkHealth
-     * @apiGroup Misc
-     * @apiVersion 0.1.0
-     *
-     * @apiSuccess {String} text Healthy
-     *
-     * @apiSuccessExample Success-Response:
-     *     HTTP/1.1 200 OK
-     *     "Healthy"
-     */
-  app.get('/health', (req, res) => res.send('Healthy'));
+  const routes = require('./routes')(db);
 
   /**
      * @api {post} /rides Insert New Rides to DB
@@ -423,6 +411,8 @@ module.exports = (db) => {
       res.send(rows);
     });
   });
+
+  app.use(routes);
 
   return app;
 };
