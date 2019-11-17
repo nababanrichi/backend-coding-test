@@ -79,11 +79,11 @@ function insertRide(req, db, callback) {
 function rideList(req, db, callback) {
   let limit = 100;
   if (req.body.limit != undefined) {
-    limit = req.body.limit;
+    limit = Number(req.body.limit);
   }
   let page = 1;
   if (req.body.page != undefined) {
-    page = req.body.page;
+    page = Number(req.body.page);
   }
   let totalPage = 1;
   let totalRecord = 0;
@@ -110,7 +110,7 @@ function rideList(req, db, callback) {
           total_record: totalRecord,
         });
       } else {
-        db.all('SELECT * FROM Rides LIMIT '+limit+' OFFSET '+offset, function(err, rows) {
+        db.all(`SELECT * FROM Rides LIMIT '${limit}' OFFSET '${offset}'`, function(err, rows) {
           if (err) {
             return callback({
               error_code: 'SERVER_ERROR',
@@ -142,7 +142,9 @@ function rideList(req, db, callback) {
  * @param {Object} callback callback data.
  */
 function rideById(req, db, callback) {
-  db.get(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, record) {
+  const rideId = Number(req.params.id);
+
+  db.get(`SELECT * FROM Rides WHERE rideID='${rideId}'`, function(err, record) {
     if (err) {
       return callback({
         error_code: 'SERVER_ERROR',
