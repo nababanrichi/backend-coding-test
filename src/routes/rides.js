@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 module.exports = (db) => {
-    /**
+  /**
      * @api {post} /rides Insert New Rides to DB
      * @apiName putRides
      * @apiGroup Rides
@@ -63,108 +63,108 @@ module.exports = (db) => {
      *       "message": "Rider name must be a non empty string"
      *     }
      */
-    app.post('/', jsonParser, (req, res) => {
-        // TODO: Dirty Code #2 - Need to find out how to set log globally
-        const requestStart = Date.now();
+  app.post('/', jsonParser, (req, res) => {
+    // TODO: Dirty Code #2 - Need to find out how to set log globally
+    const requestStart = Date.now();
 
-        const body = req.body;
+    const body = req.body;
 
-        res.on('finish', () => {
-            const {rawHeaders, httpVersion, method, socket, url} = req;
-            const {remoteAddress, remoteFamily} = socket;
-            const {statusCode, statusMessage} = res;
-            const headers = res.getHeaders();
+    res.on('finish', () => {
+      const {rawHeaders, httpVersion, method, socket, url} = req;
+      const {remoteAddress, remoteFamily} = socket;
+      const {statusCode, statusMessage} = res;
+      const headers = res.getHeaders();
 
-            if (statusCode !== 200) {
-            console.log(
-                JSON.stringify({
-                    timestamp: Date.now(),
-                    processingTime: Date.now() - requestStart,
-                    rawHeaders,
-                    body,
-                    httpVersion,
-                    method,
-                    remoteAddress,
-                    remoteFamily,
-                    url,
-                    response: {
-                    statusCode,
-                    statusMessage,
-                    headers,
-                    },
-                }),
-            );
-            }
-        });
-        // END: Dirty Code #2
-
-        const startLatitude = Number(req.body.start_lat);
-        const startLongitude = Number(req.body.start_long);
-        const endLatitude = Number(req.body.end_lat);
-        const endLongitude = Number(req.body.end_long);
-        const riderName = req.body.rider_name;
-        const driverName = req.body.driver_name;
-        const driverVehicle = req.body.driver_vehicle;
-
-        if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
-            return res.status(400).send({
-            error_code: 'VALIDATION_ERROR',
-            message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
-            });
-        }
-
-        if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
-            return res.status(400).send({
-            error_code: 'VALIDATION_ERROR',
-            message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
-            });
-        }
-
-        if (typeof riderName !== 'string' || riderName.length < 1) {
-            return res.status(400).send({
-            error_code: 'VALIDATION_ERROR',
-            message: 'Rider name must be a non empty string',
-            });
-        }
-
-        if (typeof driverName !== 'string' || driverName.length < 1) {
-            return res.status(400).send({
-            error_code: 'VALIDATION_ERROR',
-            message: 'Rider name must be a non empty string',
-            });
-        }
-
-        if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
-            return res.status(400).send({
-            error_code: 'VALIDATION_ERROR',
-            message: 'Rider name must be a non empty string',
-            });
-        }
-
-        const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
-
-        db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function(err) {
-            if (err) {
-            return res.status(500).send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error',
-            });
-            }
-
-            db.all('SELECT * FROM Rides WHERE rideID = ?', db.lastID, function(err, rows) {
-            if (err) {
-                return res.status(500).send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error',
-                });
-            }
-
-            res.send(rows);
-            });
-        });
+      if (statusCode !== 200) {
+        console.log(
+            JSON.stringify({
+              timestamp: Date.now(),
+              processingTime: Date.now() - requestStart,
+              rawHeaders,
+              body,
+              httpVersion,
+              method,
+              remoteAddress,
+              remoteFamily,
+              url,
+              response: {
+                statusCode,
+                statusMessage,
+                headers,
+              },
+            }),
+        );
+      }
     });
+    // END: Dirty Code #2
 
-    /**
+    const startLatitude = Number(req.body.start_lat);
+    const startLongitude = Number(req.body.start_long);
+    const endLatitude = Number(req.body.end_lat);
+    const endLongitude = Number(req.body.end_long);
+    const riderName = req.body.rider_name;
+    const driverName = req.body.driver_name;
+    const driverVehicle = req.body.driver_vehicle;
+
+    if (startLatitude < -90 || startLatitude > 90 || startLongitude < -180 || startLongitude > 180) {
+      return res.status(400).send({
+        error_code: 'VALIDATION_ERROR',
+        message: 'Start latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+      });
+    }
+
+    if (endLatitude < -90 || endLatitude > 90 || endLongitude < -180 || endLongitude > 180) {
+      return res.status(400).send({
+        error_code: 'VALIDATION_ERROR',
+        message: 'End latitude and longitude must be between -90 - 90 and -180 to 180 degrees respectively',
+      });
+    }
+
+    if (typeof riderName !== 'string' || riderName.length < 1) {
+      return res.status(400).send({
+        error_code: 'VALIDATION_ERROR',
+        message: 'Rider name must be a non empty string',
+      });
+    }
+
+    if (typeof driverName !== 'string' || driverName.length < 1) {
+      return res.status(400).send({
+        error_code: 'VALIDATION_ERROR',
+        message: 'Rider name must be a non empty string',
+      });
+    }
+
+    if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
+      return res.status(400).send({
+        error_code: 'VALIDATION_ERROR',
+        message: 'Rider name must be a non empty string',
+      });
+    }
+
+    const values = [req.body.start_lat, req.body.start_long, req.body.end_lat, req.body.end_long, req.body.rider_name, req.body.driver_name, req.body.driver_vehicle];
+
+    db.run('INSERT INTO Rides(startLat, startLong, endLat, endLong, riderName, driverName, driverVehicle) VALUES (?, ?, ?, ?, ?, ?, ?)', values, function(err) {
+      if (err) {
+        return res.status(500).send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
+        });
+      }
+
+      db.all('SELECT * FROM Rides WHERE rideID = ?', db.lastID, function(err, rows) {
+        if (err) {
+          return res.status(500).send({
+            error_code: 'SERVER_ERROR',
+            message: 'Unknown error',
+          });
+        }
+
+        res.send(rows);
+      });
+    });
+  });
+
+  /**
      * @api {get} /rides Get all Rides at DB
      * @apiName getRides
      * @apiGroup Rides
@@ -219,101 +219,101 @@ module.exports = (db) => {
      *       "message": "Could not find any rides"
      *     }
      */
-    app.get('/', jsonParser, (req, res) => {
-        // TODO: Dirty Code #2 - Need to find out how to set log globally
-        const requestStart = Date.now();
+  app.get('/', jsonParser, (req, res) => {
+    // TODO: Dirty Code #2 - Need to find out how to set log globally
+    const requestStart = Date.now();
 
-        const body = req.body;
+    const body = req.body;
 
-        res.on('finish', () => {
-            const {rawHeaders, httpVersion, method, socket, url} = req;
-            const {remoteAddress, remoteFamily} = socket;
-            const {statusCode, statusMessage} = res;
-            const headers = res.getHeaders();
+    res.on('finish', () => {
+      const {rawHeaders, httpVersion, method, socket, url} = req;
+      const {remoteAddress, remoteFamily} = socket;
+      const {statusCode, statusMessage} = res;
+      const headers = res.getHeaders();
 
-            if (statusCode !== 200) {
-            console.log(
-                JSON.stringify({
-                    timestamp: Date.now(),
-                    processingTime: Date.now() - requestStart,
-                    rawHeaders,
-                    body,
-                    httpVersion,
-                    method,
-                    remoteAddress,
-                    remoteFamily,
-                    url,
-                    response: {
-                    statusCode,
-                    statusMessage,
-                    headers,
-                    },
-                }),
-            );
-            }
+      if (statusCode !== 200) {
+        console.log(
+            JSON.stringify({
+              timestamp: Date.now(),
+              processingTime: Date.now() - requestStart,
+              rawHeaders,
+              body,
+              httpVersion,
+              method,
+              remoteAddress,
+              remoteFamily,
+              url,
+              response: {
+                statusCode,
+                statusMessage,
+                headers,
+              },
+            }),
+        );
+      }
+    });
+    // END: Dirty Code #2
+
+    let limit = 100;
+    if (req.body.limit != undefined) {
+      limit = req.body.limit;
+    }
+    let page = 1;
+    if (req.body.page != undefined) {
+      page = req.body.page;
+    }
+    let totalPage = 1;
+    let totalRecord = 0;
+    const offset = (page-1) * limit;
+
+    db.get('SELECT count(rideID) total_record FROM Rides', function(err, result) {
+      if (err) {
+        return res.status(500).send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
         });
-        // END: Dirty Code #2
+      }
 
-        let limit = 100;
-        if (req.body.limit != undefined) {
-            limit = req.body.limit;
-        }
-        let page = 1;
-        if (req.body.page != undefined) {
-            page = req.body.page;
-        }
-        let totalPage = 1;
-        let totalRecord = 0;
-        const offset = (page-1) * limit;
+      totalRecord = result.total_record;
+      if (totalRecord > 0) {
+        totalPage = Math.ceil(totalRecord/limit);
 
-        db.get('SELECT count(rideID) total_record FROM Rides', function(err, result) {
+        if (page > totalPage) {
+          return res.send({
+            records: [],
+            page: page,
+            limit: limit,
+            total_page: totalPage,
+            total_record: totalRecord,
+          });
+        } else {
+          db.all('SELECT * FROM Rides LIMIT '+limit+' OFFSET '+offset, function(err, rows) {
             if (err) {
-            return res.status(500).send({
+              return res.status(500).send({
                 error_code: 'SERVER_ERROR',
                 message: 'Unknown error',
+              });
+            }
+
+            res.send({
+              records: rows,
+              page: page,
+              limit: limit,
+              total_page: totalPage,
+              total_record: totalRecord,
             });
-            }
-
-            totalRecord = result.total_record;
-            if (totalRecord > 0) {
-            totalPage = Math.ceil(totalRecord/limit);
-
-            if (page > totalPage) {
-                return res.send({
-                records: [],
-                page: page,
-                limit: limit,
-                total_page: totalPage,
-                total_record: totalRecord,
-                });
-            } else {
-                db.all('SELECT * FROM Rides LIMIT '+limit+' OFFSET '+offset, function(err, rows) {
-                if (err) {
-                    return res.status(500).send({
-                    error_code: 'SERVER_ERROR',
-                    message: 'Unknown error',
-                    });
-                }
-
-                res.send({
-                    records: rows,
-                    page: page,
-                    limit: limit,
-                    total_page: totalPage,
-                    total_record: totalRecord,
-                });
-                });
-            }
-            } else {
-            res.status(404).send({
-                error_code: 'RIDES_NOT_FOUND_ERROR',
-                message: 'Could not find any rides',
-            });
-            }
+          });
+        }
+      } else {
+        res.status(404).send({
+          error_code: 'RIDES_NOT_FOUND_ERROR',
+          message: 'Could not find any rides',
         });
+      }
     });
+  });
 
-    /**
+  /**
      * @api {get} /rides/:id Get Rides by ID
      * @apiName getRidesById
      * @apiGroup Rides
@@ -353,59 +353,59 @@ module.exports = (db) => {
      *       "message": "Could not find any rides"
      *     }
      */
-    app.get('/:id', (req, res) => {
-        // TODO: Dirty Code #2 - Need to find out how to set log globally
-        const requestStart = Date.now();
+  app.get('/:id', (req, res) => {
+    // TODO: Dirty Code #2 - Need to find out how to set log globally
+    const requestStart = Date.now();
 
-        const body = req.body;
+    const body = req.body;
 
-        res.on('finish', () => {
-            const {rawHeaders, httpVersion, method, socket, url} = req;
-            const {remoteAddress, remoteFamily} = socket;
-            const {statusCode, statusMessage} = res;
-            const headers = res.getHeaders();
+    res.on('finish', () => {
+      const {rawHeaders, httpVersion, method, socket, url} = req;
+      const {remoteAddress, remoteFamily} = socket;
+      const {statusCode, statusMessage} = res;
+      const headers = res.getHeaders();
 
-            if (statusCode !== 200) {
-            console.log(
-                JSON.stringify({
-                    timestamp: Date.now(),
-                    processingTime: Date.now() - requestStart,
-                    rawHeaders,
-                    body,
-                    httpVersion,
-                    method,
-                    remoteAddress,
-                    remoteFamily,
-                    url,
-                    response: {
-                    statusCode,
-                    statusMessage,
-                    headers,
-                    },
-                }),
-            );
-            }
-        });
-        // END: Dirty Code #2
-
-        db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
-            if (err) {
-            return res.status(500).send({
-                error_code: 'SERVER_ERROR',
-                message: 'Unknown error',
-            });
-            }
-
-            if (rows.length === 0) {
-            return res.status(404).send({
-                error_code: 'RIDES_NOT_FOUND_ERROR',
-                message: 'Could not find any rides',
-            });
-            }
-
-            res.send(rows);
-        });
+      if (statusCode !== 200) {
+        console.log(
+            JSON.stringify({
+              timestamp: Date.now(),
+              processingTime: Date.now() - requestStart,
+              rawHeaders,
+              body,
+              httpVersion,
+              method,
+              remoteAddress,
+              remoteFamily,
+              url,
+              response: {
+                statusCode,
+                statusMessage,
+                headers,
+              },
+            }),
+        );
+      }
     });
+    // END: Dirty Code #2
 
-    return app;
+    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
+      if (err) {
+        return res.status(500).send({
+          error_code: 'SERVER_ERROR',
+          message: 'Unknown error',
+        });
+      }
+
+      if (rows.length === 0) {
+        return res.status(404).send({
+          error_code: 'RIDES_NOT_FOUND_ERROR',
+          message: 'Could not find any rides',
+        });
+      }
+
+      res.send(rows);
+    });
+  });
+
+  return app;
 };
