@@ -151,6 +151,8 @@ module.exports = (db) => {
         });
       }
 
+      console.log(db.lastID);
+
       db.all('SELECT * FROM Rides WHERE rideID = ?', db.lastID, function(err, rows) {
         if (err) {
           return res.status(500).send({
@@ -386,7 +388,7 @@ module.exports = (db) => {
     });
     // END: Dirty Code #2
 
-    db.get(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
+    db.get(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, record) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',
@@ -394,14 +396,14 @@ module.exports = (db) => {
         });
       }
 
-      if (rows.length === 0) {
+      if (record == null) {
         return res.status(404).send({
           error_code: 'RIDES_NOT_FOUND_ERROR',
           message: 'Could not find any rides',
         });
       }
 
-      res.send(rows);
+      res.send(record);
     });
   });
 
