@@ -6,7 +6,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(':memory:');
 
 const app = require('../src/app')(db);
-const buildSchemas = require('../src/schemas');
+const buildSchemas = require('../src/orm/schemas');
 
 describe('RIDES API DB not connected', () => {
     describe('GET /rides', () => {
@@ -57,6 +57,15 @@ describe('API tests', () => {
                 .get('/health')
                 .expect('Content-Type', /text/)
                 .expect(200, done);
+        });
+    });
+
+    describe('GET /randomurl', () => {
+        it('should return error', (done) => {
+            request(app)
+                .get('/randomurl')
+                .expect('Content-Type', /json/)
+                .expect(404, done);
         });
     });
 });
