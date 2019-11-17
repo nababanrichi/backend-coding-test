@@ -317,25 +317,23 @@ module.exports = (db) => {
      * @api {get} /rides/:id Get Rides by ID
      * @apiName getRidesById
      * @apiGroup Rides
-     * @apiVersion 0.1.0
+     * @apiVersion 0.2.0
      *
      * @apiSuccess {Object[]} rides Rides Record.
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
-     *      [
-     *          {
-     *              "rideID": 1,
-     *              "startLat": 0,
-     *              "startLong": 0,
-     *              "endLat": 0,
-     *              "endLong": 0,
-     *              "riderName": "Budi",
-     *              "driverName": "Anton",
-     *              "driverVehicle": "Tesla Model 3 2020",
-     *              "created": "2019-11-14 03:17:51"
-     *          }
-     *      ]
+     *     {
+     *         "rideID": 1,
+     *         "startLat": 0,
+     *         "startLong": 0,
+     *         "endLat": 0,
+     *         "endLong": 0,
+     *         "riderName": "Budi",
+     *         "driverName": "Anton",
+     *         "driverVehicle": "Tesla Model 3 2020",
+     *         "created": "2019-11-14 03:17:51"
+     *     }
      *
      * @apiError {String} error_code Error Code (e.g.: VALIDATION_ERROR).
      * @apiError {String} message Error Message.
@@ -388,7 +386,7 @@ module.exports = (db) => {
     });
     // END: Dirty Code #2
 
-    db.all(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
+    db.get(`SELECT * FROM Rides WHERE rideID='${req.params.id}'`, function(err, rows) {
       if (err) {
         return res.status(500).send({
           error_code: 'SERVER_ERROR',
